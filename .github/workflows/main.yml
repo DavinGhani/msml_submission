@@ -1,4 +1,3 @@
-# Nama workflow Anda
 name: Automatic Preprocessing
 
 # Trigger
@@ -39,8 +38,7 @@ jobs:
         shell: bash -l {0} 
         run: |
           echo "Running preprocessing script..."
-          # Ganti 'automate_Nama-anda.py' dengan nama file Anda
-          python preprocessing/automate_Nama-anda.py
+          python preprocessing/automate_davin.py
 
       # Langkah 5: Commit file CSV baru yang dihasilkan
       - name: 5. Commit Processed Data
