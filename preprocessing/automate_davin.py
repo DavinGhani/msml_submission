@@ -7,14 +7,12 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 import os
 
-# --- 1. Mendefinisikan Path ---
+# 1. Mendefinisikan Path
 
 # Path ke file mentah (raw)
-# os.path.join('..', 'dataset_raw', 'heart.csv')
 RAW_DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'dataset_raw', 'heart.csv')
 
 # Path untuk menyimpan data yang sudah diproses 
-# Kita akan buat folder baru untuk ini
 PROCESSED_DATA_DIR = os.path.join(os.path.dirname(__file__), 'dataset_preprocessing')
 
 # Buat folder 'dataset_preprocessing' jika belum ada
@@ -23,7 +21,7 @@ os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 print(f"Path data mentah: {RAW_DATA_PATH}")
 print(f"Direktori data proses: {PROCESSED_DATA_DIR}")
 
-# --- 2. Fungsi Preprocessing Utama ---
+# 2. Fungsi Preprocessing Utama
 
 def preprocess(raw_data_path, processed_data_dir):
     """
@@ -38,7 +36,7 @@ def preprocess(raw_data_path, processed_data_dir):
     
     print("Memulai preprocessing...")
 
-    # --- 4.1 & 4.2: Load & Cleaning ---
+    # 4.1 & 4.2: Load & Cleaning
     try:
         df = pd.read_csv(raw_data_path)
         print(f"Data mentah dimuat: {df.shape}")
@@ -50,11 +48,11 @@ def preprocess(raw_data_path, processed_data_dir):
     df.drop_duplicates(inplace=True)
     print(f"Data setelah dihapus duplikat: {df.shape}")
 
-    # --- 4.3: Pemisahan Fitur (X) dan Target (y) ---
+    # 4.3: Pemisahan Fitur (X) dan Target (y)
     X = df.drop('target', axis=1)
     y = df['target']
 
-    # --- 4.4: Pembagian Data (Train-Test Split) ---
+    # 4.4: Pembagian Data (Train-Test Split)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, 
         test_size=0.2, 
@@ -63,8 +61,7 @@ def preprocess(raw_data_path, processed_data_dir):
     )
     print(f"Data dibagi: {X_train.shape} train, {X_test.shape} test")
 
-    # --- 4.5: Definisi Kolom & Pipeline Preprocessing ---
-    # Definisikan nama kolom 
+    # 4.5: Definisi Kolom & Pipeline Preprocessing
     numerical_features = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
     categorical_features = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal']
 
@@ -87,17 +84,14 @@ def preprocess(raw_data_path, processed_data_dir):
         remainder='passthrough'
     )
 
-    # --- 4.6: Menerapkan Pipeline ke Data ---
+    # 4.6: Menerapkan Pipeline ke Data
     print("Menerapkan preprocessing (fit_transform) ke X_train...")
     X_train_preprocessed = preprocessor.fit_transform(X_train)
     
     print("Menerapkan preprocessing (transform) ke X_test...")
     X_test_preprocessed = preprocessor.transform(X_test)
 
-    # --- 7. Menyimpan Data yang Sudah Diproses ---
-    # Kita perlu mendapatkan nama kolom setelah OneHotEncoding
-    # Ini penting agar file CSV kita punya header
-    
+    # 7. Menyimpan Data yang Sudah Diprosesr
     # Ambil nama fitur kategorikal baru dari OneHotEncoder
     ohe_feature_names = preprocessor.named_transformers_['cat'] \
                                     .named_steps['onehot'] \
@@ -126,8 +120,6 @@ def preprocess(raw_data_path, processed_data_dir):
     print("Preprocessing selesai.")
 
 
-# --- 3. Menjalankan Fungsi ---
+# 3. Menjalankan Fungsi
 if __name__ == '__main__':
-    # Ini memastikan kode di bawah hanya berjalan saat file ini dieksekusi
-    # langsung, bukan saat di-import.
     preprocess(raw_data_path=RAW_DATA_PATH, processed_data_dir=PROCESSED_DATA_DIR)
